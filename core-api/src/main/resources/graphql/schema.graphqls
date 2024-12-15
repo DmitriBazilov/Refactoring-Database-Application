@@ -1,0 +1,60 @@
+scalar Date
+
+type Query {
+    events: [Event]
+    linesByEventId(eventId: Int!): [Line]
+}
+
+type Mutation {
+    userProfile: UserProfileMutation!
+}
+
+type UserProfileMutation {
+    create(userProfileCreateInput: UserProfileCreateInput!): UserProfileCreatePayload!
+}
+
+input UserProfileCreateInput {
+    mail: String!
+    phoneNumber: String!,
+    password: String!,
+    firstName: String!,
+    lastName: String!,
+    passport: String!,
+    dateOfBirth: Date!,
+    taxPayerId: String!,
+}
+
+type UserProfileCreatePayload {
+    id: Int!
+}
+
+type Tournament {
+    id: Int
+    name: String
+}
+
+type Event {
+    id: Int
+    name: String
+    sport: String
+    tournament: Tournament
+}
+
+type Result {
+    id: Int
+    result: String
+    coefficient: Float
+}
+
+enum LineType {
+    TOTAL
+    SCORE
+}
+
+type Line {
+    id: Int
+    type: LineType
+    availableResults: [Result]
+    lineResult: Result
+    isClosed: Boolean
+}
