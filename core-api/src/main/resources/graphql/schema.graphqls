@@ -3,10 +3,29 @@ scalar Date
 type Query {
     events: [Event]
     linesByEventId(eventId: Int!): [Line]
+    betById(betId: Int!): Bet
+    userProfile: UserProfile
 }
 
 type Mutation {
     userProfile: UserProfileMutation!
+    betMutation: BetMutation!
+    line: LineMutation!
+}
+
+type BetMutation {
+    create(betCreateInput: BetCreateInput!): BetCreatePayload!
+}
+
+input BetCreateInput {
+    lineId: Int!
+    resultId: Int!
+    amount: Int!
+    coefficient: Float!
+}
+
+type BetCreatePayload {
+    id: Int!
 }
 
 type UserProfileMutation {
@@ -15,13 +34,31 @@ type UserProfileMutation {
 
 input UserProfileCreateInput {
     mail: String!
-    phoneNumber: String!,
-    password: String!,
-    firstName: String!,
-    lastName: String!,
-    passport: String!,
-    dateOfBirth: Date!,
-    taxPayerId: String!,
+    phoneNumber: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+    passport: String!
+    dateOfBirth: Date!
+    taxPayerId: String!
+}
+
+type LineMutation {
+    finish(finishLineInput: FinishLineInput!): FinishLinePayload!
+}
+
+input FinishLineInput {
+    resultId: Int!,
+}
+
+type FinishLinePayload {
+    lineId: Int!,
+    resultId: Int!,
+}
+
+type UserProfile {
+    id: Int!,
+    balance: Int!
 }
 
 type UserProfileCreatePayload {
@@ -57,4 +94,22 @@ type Line {
     availableResults: [Result]
     lineResult: Result
     isClosed: Boolean
+}
+
+enum Status {
+    VALIDATING,
+    FAILED_BY_BALANCE,
+    FAILED_BY_COEFFICIENT,
+    ACCEPTED,
+    CALCULATED
+}
+
+type Bet {
+    id: Int
+    userId: Int
+    lineId: Int
+    resultId: Int
+    amount: Int
+    coefficient: Float
+    status: Status
 }
